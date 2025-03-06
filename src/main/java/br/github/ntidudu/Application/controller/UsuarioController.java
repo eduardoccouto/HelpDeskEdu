@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.github.ntidudu.Application.dto.UsuarioDTO;
+import br.github.ntidudu.Application.entity.Usuario.FuncaoUsuario;
+import br.github.ntidudu.Application.entity.Usuario.Usuario;
 import br.github.ntidudu.Application.service.UsuarioService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +25,13 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<Void> cadastrarUsuarioBasico(@RequestBody UsuarioDTO entity) {
-        var usuarioEntity = entity.mapearUsuarioBasico();
+        Usuario usuarioEntity = entity.mapearUsuarioBasico();
+        if(usuarioEntity.getSenha() == null) {
+            return ResponseEntity.status(403).build();
+        }
+        if(usuarioEntity.getFuncao() == FuncaoUsuario.TECNICO){
+            return ResponseEntity.status(403).build();
+        }
         usuarioService.cadastrarUsuario(usuarioEntity);
 
         URI location = ServletUriComponentsBuilder
@@ -35,5 +43,7 @@ public class UsuarioController {
         return ResponseEntity.created(location).build();
         
     }
+
+
     
 }

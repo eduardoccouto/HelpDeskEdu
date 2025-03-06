@@ -3,11 +3,14 @@ package br.github.ntidudu.Application.entity.Chamado;
 import br.github.ntidudu.Application.entity.Usuario.Usuario;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "chamado")
+@EntityListeners(AuditingEntityListener.class)
 public class Chamado {
 
     @Id
@@ -24,7 +27,11 @@ public class Chamado {
     @Enumerated(EnumType.STRING)
     private StatusChamado status;
 
-    private LocalDate criacao;
+    @CreatedDate
+    private LocalDateTime criacao;
+
+    @LastModifiedDate
+    private LocalDateTime atualizacao;
 
     @ManyToOne(
         fetch = FetchType.LAZY
@@ -32,15 +39,15 @@ public class Chamado {
     @JoinColumn(name  = "usuario_id")
     private Usuario usuario;
 
-
     public Chamado(Long id, String titulo, String descricao, PrioridadeChamado prioridade, StatusChamado status,
-            LocalDate criacao, Usuario usuario) {
+            LocalDateTime criacao, LocalDateTime atualizacao, Usuario usuario) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
         this.prioridade = prioridade;
         this.status = status;
         this.criacao = criacao;
+        this.atualizacao = atualizacao;
         this.usuario = usuario;
     }
 
@@ -84,6 +91,22 @@ public class Chamado {
         this.status = status;
     }
 
+    public LocalDateTime getCriacao() {
+        return criacao;
+    }
+
+    public void setCriacao(LocalDateTime criacao) {
+        this.criacao = criacao;
+    }
+
+    public LocalDateTime getAtualizacao() {
+        return atualizacao;
+    }
+
+    public void setAtualizacao(LocalDateTime atualizacao) {
+        this.atualizacao = atualizacao;
+    }
+
     public Usuario getUsuario() {
         return usuario;
     }
@@ -93,22 +116,29 @@ public class Chamado {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Chamado chamado = (Chamado) o;
-        return Objects.equals(id, chamado.id);
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Chamado other = (Chamado) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
     }
 
-    public LocalDate getCriacao() {
-        return criacao;
-    }
 
-    public void setCriacao(LocalDate criacao) {
-        this.criacao = criacao;
-    }
 }
