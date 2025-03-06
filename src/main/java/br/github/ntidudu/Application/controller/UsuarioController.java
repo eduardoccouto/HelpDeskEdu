@@ -26,12 +26,7 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<Void> cadastrarUsuarioBasico(@RequestBody UsuarioDTO entity) {
         Usuario usuarioEntity = entity.mapearUsuarioBasico();
-        if(usuarioEntity.getSenha() == null) {
-            return ResponseEntity.status(403).build();
-        }
-        if(usuarioEntity.getFuncao() == FuncaoUsuario.TECNICO){
-            return ResponseEntity.status(403).build();
-        }
+  
         usuarioService.cadastrarUsuario(usuarioEntity);
 
         URI location = ServletUriComponentsBuilder
