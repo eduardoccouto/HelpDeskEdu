@@ -1,9 +1,11 @@
 package br.github.ntidudu.Application.dto;
 
+import java.util.Collection;
+
 import br.github.ntidudu.Application.entity.Usuario.FuncaoUsuario;
 import br.github.ntidudu.Application.entity.Usuario.Usuario;
 
-public record UsuarioDTO(String nome, String username, String password, String email, FuncaoUsuario funcao) {
+public record UsuarioDTO(String nome, String username, String password, String email, Collection<FuncaoUsuario> funcao) {
 
     public Usuario mapearUsuarioBasico(){
 

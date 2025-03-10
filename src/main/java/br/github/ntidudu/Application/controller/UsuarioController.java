@@ -23,7 +23,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @PostMapping
+    @PostMapping("cadastro")
     public ResponseEntity<Void> cadastrarUsuarioBasico(@RequestBody UsuarioDTO entity) {
         Usuario usuarioEntity = entity.mapearUsuarioBasico();
   

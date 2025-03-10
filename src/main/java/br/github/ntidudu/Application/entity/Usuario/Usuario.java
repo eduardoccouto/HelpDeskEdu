@@ -4,7 +4,7 @@ import br.github.ntidudu.Application.entity.Chamado.Chamado;
 
 import jakarta.persistence.*;
 
-
+import java.util.Collection;
 import java.util.List;
 
 
@@ -26,8 +26,11 @@ public class Usuario {
     @Column(unique = true)
     private String email;
 
+    @ElementCollection(targetClass = FuncaoUsuario.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private FuncaoUsuario funcao;
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name="user_id"))
+    @Column(name = "role")
+    private Collection<FuncaoUsuario> funcao;
 
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Chamado> chamados;
@@ -75,14 +78,6 @@ public class Usuario {
         this.email = email;
     }
 
-    public FuncaoUsuario getFuncao() {
-        return funcao;
-    }
-
-    public void setFuncao(FuncaoUsuario funcao) {
-        this.funcao = funcao;
-    }
-
     public List<Chamado> getChamados() {
         return chamados;
     }
@@ -91,8 +86,12 @@ public class Usuario {
         this.chamados = chamados;
     }
 
-    public Usuario(Long id, String nome, String username, String password, String email, FuncaoUsuario funcao,
-            List<Chamado> chamados) {
+
+
+    
+
+    public Usuario(Long id, String nome, String username, String password, String email,
+            Collection<FuncaoUsuario> funcao, List<Chamado> chamados) {
         this.id = id;
         this.nome = nome;
         this.username = username;
@@ -126,6 +125,16 @@ public class Usuario {
             return false;
         return true;
     }
+
+    public Collection<FuncaoUsuario> getFuncao() {
+        return funcao;
+    }
+
+    public void setFuncao(Collection<FuncaoUsuario> funcao) {
+        this.funcao = funcao;
+    }
+
+
 
    
     

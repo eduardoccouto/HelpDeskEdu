@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import br.github.ntidudu.Application.dto.ChamadoDtoResponse;
 import br.github.ntidudu.Application.entity.Chamado.Chamado;
 import br.github.ntidudu.Application.entity.Chamado.PrioridadeChamado;
+import br.github.ntidudu.Application.entity.Chamado.StatusChamado;
 import br.github.ntidudu.Application.repository.ChamadoRepository;
 
 @Service
@@ -32,6 +33,18 @@ public class ChamadoService {
 
     public Optional<Chamado> buscarChamadoPorId(Long id){
         return chamadoRepository.findById(id);
+    }
+
+
+    public void atualizarStatusChamadoPorId(Long id, StatusChamado statusChamado){
+        
+        Optional<Chamado> chamado = chamadoRepository.findById(id);
+
+        if(chamado.isPresent()){
+            chamado.get().setStatus(statusChamado);
+            chamadoRepository.save(chamado.get());
+        }
+
     }
 
     public List<ChamadoDtoResponse> buscarChamadoPorPrioridade(PrioridadeChamado prioridadeChamado){

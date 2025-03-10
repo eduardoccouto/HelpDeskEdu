@@ -14,7 +14,7 @@ public class AuthenticationController {
   @Autowired
   private AuthenticationService authenticationService;
 
-  @PostMapping("authenticate")
+  @PostMapping("login")
   public String authenticate(
       Authentication authentication) {
     return authenticationService.authenticate(authentication);

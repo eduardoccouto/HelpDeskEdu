@@ -37,9 +37,10 @@ public class SecurityConfig {
     http.csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(
             auth -> auth
-                .requestMatchers("/authenticate").permitAll()
-                .anyRequest().authenticated())
-        .httpBasic(Customizer.withDefaults())
+               .requestMatchers("/login").permitAll()
+               .requestMatchers("/usuarios/**").hasAnyAuthority("ADM")
+               .anyRequest().authenticated())
+        .httpBasic(Customizer.withDefaults()) //HTTP Basic
         .oauth2ResourceServer(
             conf -> conf.jwt(
                 jwt -> jwt.decoder(jwtDecoder())));
@@ -62,4 +63,6 @@ public class SecurityConfig {
     JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
     return new NimbusJwtEncoder(jwks);
   }
+
+  
 }
