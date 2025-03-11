@@ -39,6 +39,7 @@ public class SecurityConfig {
             auth -> auth
                .requestMatchers("/login").permitAll()
                .requestMatchers("/usuarios/**").hasAnyAuthority("ADM")
+               //.requestMatchers("/usuarios/**").permitAll()
                .anyRequest().authenticated())
         .httpBasic(Customizer.withDefaults()) //HTTP Basic
         .oauth2ResourceServer(

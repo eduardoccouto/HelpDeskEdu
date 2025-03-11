@@ -17,6 +17,10 @@ public class UserAuthenticade implements UserDetails {
     this.usuario = usuario;
   }
 
+  public Usuario getUsuario() {
+    return usuario;
+}
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
 
@@ -24,6 +28,7 @@ public class UserAuthenticade implements UserDetails {
         .map(role -> new SimpleGrantedAuthority(role.name()))
         .collect(Collectors.toList());
   }
+
 
   @Override
   public String getPassword() {

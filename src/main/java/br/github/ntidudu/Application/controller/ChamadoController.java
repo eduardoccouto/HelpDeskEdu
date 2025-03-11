@@ -1,19 +1,25 @@
 package br.github.ntidudu.Application.controller;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.github.ntidudu.Application.dto.ChamadoDTO;
 import br.github.ntidudu.Application.dto.ChamadoDtoResponse;
+import br.github.ntidudu.Application.entity.Chamado.Chamado;
 import br.github.ntidudu.Application.entity.Chamado.StatusChamado;
+import br.github.ntidudu.Application.mappers.ChamadoMapper;
 import br.github.ntidudu.Application.service.ChamadoService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +30,27 @@ public class ChamadoController {
 
     @Autowired
     private ChamadoService chamadoService;
+
+    @Autowired
+    private ChamadoMapper chamadoMapper;
+
+    @PreAuthorize("hasAuthority('USUARIO_BASICO')")
+    @PostMapping
+    public ResponseEntity<Void> cadastrarUsuarioBasico(@RequestBody ChamadoDTO chamadoDTO) {
+
+        Chamado chamadoEntity = chamadoMapper.toEntity(chamadoDTO);
+
+        chamadoService.cadastrarChamado(chamadoEntity);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("{id}")
+                .buildAndExpand(chamadoEntity.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
+
+    }
 
     @GetMapping("v1")
     public ResponseEntity<ChamadoDtoResponse> filtrarChamadoPorID(@RequestParam Long id) {
@@ -43,7 +70,7 @@ public class ChamadoController {
     }
 
     @PutMapping("path/{id}")
-    public ResponseEntity<Void> atualizarStatus(@PathVariable Long id,
+    public ResponseEntity<Object> atualizarStatus(@PathVariable Long id,
             @RequestBody StatusChamado statutChamado) {
 
         chamadoService.atualizarStatusChamadoPorId(id, statutChamado);
