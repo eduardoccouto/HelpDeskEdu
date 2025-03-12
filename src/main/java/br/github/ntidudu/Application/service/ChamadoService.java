@@ -4,10 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.github.ntidudu.Application.dto.ChamadoDtoResponse;
 import br.github.ntidudu.Application.entity.Chamado.Chamado;
@@ -23,6 +24,9 @@ public class ChamadoService {
     @Autowired
     private ChamadoRepository chamadoRepository;
 
+    
+
+    @Transactional
     public Chamado cadastrarChamado(Chamado chamado) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -34,11 +38,12 @@ public class ChamadoService {
             chamado.setUsuario(usuario_logado);
         }
 
+        chamado.setStatus(StatusChamado.ABERTO);
         chamado.setCriacao(LocalDateTime.now());
 
         return chamadoRepository.save(chamado);
     }
-
+    
     public void excluirChamadoPorId(Long id) {
         var chamado = chamadoRepository.findById(id);
 

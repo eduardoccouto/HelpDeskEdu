@@ -2,30 +2,27 @@ package br.github.ntidudu.Application.dto;
 
 import java.time.LocalDateTime;
 
-//import br.github.ntidudu.Application.entity.Chamado.Chamado;
 import br.github.ntidudu.Application.entity.Chamado.PrioridadeChamado;
 import br.github.ntidudu.Application.entity.Chamado.StatusChamado;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record ChamadoDTO(
-         
-        String titulo,
-        String descricao,
-        PrioridadeChamado prioridade,
-        StatusChamado status,
-        LocalDateTime criacao,
-        LocalDateTime atualizacao
-        
+
+                @NotBlank @Size(min = 5, max = 200, message = "Campo fora do padrão") String titulo,
+
+                @NotBlank(message = "campo obrigatorio") String descricao,
+
+                @NotNull PrioridadeChamado prioridade,
+
+                StatusChamado status,
+
+                LocalDateTime criacao,
+                LocalDateTime atualizacao
 
 ) {
 
-        // public Chamado chamadoMapping() {
-        //     Chamado new_chamado = new Chamado();
-        //     new_chamado.setTitulo(titulo);
-        //     new_chamado.setDescricao(descricao);
-        //     new_chamado.setPrioridade(prioridade);
-        //     new_chamado.setStatus(StatusChamado.ABERTO);
 
-        //     return new_chamado;
-        // }
 
 }

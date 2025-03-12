@@ -11,10 +11,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.github.ntidudu.Application.dto.ChamadoDTO;
 import br.github.ntidudu.Application.dto.ChamadoDtoResponse;
+import br.github.ntidudu.Application.dto.ErroResposta;
 import br.github.ntidudu.Application.entity.Chamado.Chamado;
 import br.github.ntidudu.Application.entity.Chamado.StatusChamado;
 import br.github.ntidudu.Application.mappers.ChamadoMapper;
 import br.github.ntidudu.Application.service.ChamadoService;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,9 +38,9 @@ public class ChamadoController {
 
     @PreAuthorize("hasAuthority('USUARIO_BASICO')")
     @PostMapping
-    public ResponseEntity<Void> cadastrarUsuarioBasico(@RequestBody ChamadoDTO chamadoDTO) {
-
-        Chamado chamadoEntity = chamadoMapper.toEntity(chamadoDTO);
+    public ResponseEntity<Object> cadastrarUsuarioBasico(@RequestBody @Valid ChamadoDTO chamadoDTO) {
+        try{
+            Chamado chamadoEntity = chamadoMapper.toEntity(chamadoDTO);
 
         chamadoService.cadastrarChamado(chamadoEntity);
 
@@ -50,6 +52,13 @@ public class ChamadoController {
 
         return ResponseEntity.created(location).build();
 
+        }catch(Exception e){
+
+            var errDTO = ErroResposta.conflito(e.getMessage());
+            return ResponseEntity.status(errDTO.status()).body(errDTO);
+            
+        }
+         
     }
 
     @GetMapping("v1")
