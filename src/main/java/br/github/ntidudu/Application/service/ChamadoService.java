@@ -10,13 +10,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.github.ntidudu.Application.dto.ChamadoDtoResponse;
+import br.github.ntidudu.Application.dto.ChamadoDTO;
 import br.github.ntidudu.Application.entity.Chamado.Chamado;
 import br.github.ntidudu.Application.entity.Chamado.PrioridadeChamado;
 import br.github.ntidudu.Application.entity.Chamado.StatusChamado;
 import br.github.ntidudu.Application.entity.Usuario.Usuario;
+import br.github.ntidudu.Application.exception.UsuarioNaoLogado;
+import br.github.ntidudu.Application.mappers.ChamadoMapper;
 import br.github.ntidudu.Application.repository.ChamadoRepository;
 import br.github.ntidudu.Application.security.UserAuthenticade;
+import br.github.ntidudu.Application.validator.SessionValidator;
 
 @Service
 public class ChamadoService {
@@ -24,26 +27,43 @@ public class ChamadoService {
     @Autowired
     private ChamadoRepository chamadoRepository;
 
-    
+    @Autowired
+    private SessionValidator sessionValidator;
+
+    @Autowired
+    private ChamadoMapper chamadoMapper;
 
     @Transactional
     public Chamado cadastrarChamado(Chamado chamado) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.getPrincipal() instanceof UserAuthenticade) {
-            UserAuthenticade userDetails = (UserAuthenticade) authentication.getPrincipal();
-            Usuario usuario_logado = userDetails.getUsuario();
+        // if (authentication != null && authentication.getPrincipal() instanceof
+        // UserAuthenticade) {
+        // UserAuthenticade userDetails = (UserAuthenticade)
+        // authentication.getPrincipal();
+        // Usuario usuario_logado = userDetails.getUsuario();
 
-            chamado.setUsuario(usuario_logado);
+        // chamado.setUsuario(usuario_logado);
+        // }
+
+        var sessao = sessionValidator.validarSessao();
+
+        if (sessao != null) {
+
+            chamado.setStatus(StatusChamado.ABERTO);
+            chamado.setCriacao(LocalDateTime.now());
+            chamado.setUsuario(sessao);
+            return chamadoRepository.save(chamado);
         }
 
-        chamado.setStatus(StatusChamado.ABERTO);
-        chamado.setCriacao(LocalDateTime.now());
+        throw new UsuarioNaoLogado("Nenhuma sessão aberta");
+        
+        
 
-        return chamadoRepository.save(chamado);
     }
-    
+
     public void excluirChamadoPorId(Long id) {
         var chamado = chamadoRepository.findById(id);
 
@@ -67,11 +87,10 @@ public class ChamadoService {
 
     }
 
-    public List<ChamadoDtoResponse> buscarChamadoPorPrioridade(PrioridadeChamado prioridadeChamado) {
-        return chamadoRepository
-                .findAllByPrioridadeChamado(prioridadeChamado)
+    public List<ChamadoDTO> buscarChamadoPorPrioridade(PrioridadeChamado prioridadeChamado) {
+        return chamadoRepository.findAllByPrioridadeChamado(prioridadeChamado)
                 .stream()
-                .map(x -> new ChamadoDtoResponse(x))
+                .map(x -> chamadoMapper.toDTO(x))
                 .toList();
     }
 
