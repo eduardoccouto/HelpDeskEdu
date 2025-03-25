@@ -21,4 +21,6 @@ public interface ChamadoRepository extends JpaRepository<Chamado, Long> {
             SELECT c from Chamado c where c.titulo like :titulo
             """)
     List<Chamado> findAllByTitulo(@Param("titulo") String titulo);
+
+    
 }

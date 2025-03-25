@@ -6,9 +6,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import br.github.ntidudu.Application.dto.ChamadoDTO;
-import br.github.ntidudu.Application.dto.ErroResposta;
 import br.github.ntidudu.Application.entity.Chamado.Chamado;
 import br.github.ntidudu.Application.entity.Chamado.StatusChamado;
+import br.github.ntidudu.Application.exception.ChamadoNaoEncontrado;
 import br.github.ntidudu.Application.mappers.ChamadoMapper;
 import br.github.ntidudu.Application.service.ChamadoService;
 import jakarta.validation.Valid;
@@ -34,41 +34,38 @@ public class ChamadoController implements GenericController {
     @PreAuthorize("hasAuthority('USUARIO_BASICO')")
     @PostMapping
     public ResponseEntity<Object> cadastrarUsuarioBasico(@RequestBody @Valid ChamadoDTO chamadoDTO) {
-        
-        try {
-            Chamado chamadoEntity = chamadoMapper.toEntity(chamadoDTO);
 
-            chamadoService.cadastrarChamado(chamadoEntity);
+        Chamado chamadoEntity = chamadoMapper.toEntity(chamadoDTO);
 
-            var url = gerarHeaderLocation(chamadoEntity.getId());
+        chamadoService.cadastrarChamado(chamadoEntity);
 
-            return ResponseEntity.created(url).build();
+        var url = gerarHeaderLocation(chamadoEntity.getId());
 
-        } catch (Exception e) {
-
-            var errDTO = ErroResposta.conflito(e.getMessage());
-            return ResponseEntity.status(errDTO.status()).body(errDTO);
-
-        }
+        return ResponseEntity.created(url).build();
 
     }
 
     @PreAuthorize("hasAutority('TECNICO')")
     @GetMapping("v1")
-    public ResponseEntity<ChamadoDTO> filtrarChamadoPorID(@RequestParam Long id) {
+    public ResponseEntity<ChamadoDTO> filtrarChamadoPorID(@RequestParam @Valid Long id) {
 
-        var chamado = chamadoService.buscarChamadoPorId(id).map(x -> chamadoMapper.toDTO(x));
+        var chamado = chamadoService.buscarChamadoPorId(id)
+                .map(chamadoMapper::toDTO);
 
         return ResponseEntity.ok(chamado.get());
+
     }
 
     @PreAuthorize("hasAutority('TECNICO')")
     @DeleteMapping("v1/{id}")
-    public ResponseEntity<Void> deletarChamadoPorId(@PathVariable Long id) {
+    public ResponseEntity<?> deletarChamadoPorId(@PathVariable Long id) {
 
-        chamadoService.excluirChamadoPorId(id);
+        return chamadoService.buscarChamadoPorId(id)
+                .map(chamado -> {
+                    chamadoService.excluirChamado(chamado);
+                    return ResponseEntity.noContent().build();
 
-        return ResponseEntity.ok().build();
+                }).orElseGet(() -> ResponseEntity.notFound().build());
 
     }
 

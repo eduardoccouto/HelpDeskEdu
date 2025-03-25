@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
-
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -28,7 +27,7 @@ public class Usuario {
 
     @ElementCollection(targetClass = FuncaoUsuario.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name="user_id"))
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     private Collection<FuncaoUsuario> funcao;
 
@@ -86,10 +85,6 @@ public class Usuario {
         this.chamados = chamados;
     }
 
-
-
-    
-
     public Usuario(Long id, String nome, String username, String password, String email,
             Collection<FuncaoUsuario> funcao, List<Chamado> chamados) {
         this.id = id;
@@ -134,8 +129,4 @@ public class Usuario {
         this.funcao = funcao;
     }
 
-
-
-   
-    
 }
