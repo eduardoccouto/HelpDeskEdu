@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.github.ntidudu.Application.dto.ErroCampo;
 import br.github.ntidudu.Application.dto.ErroResposta;
-import br.github.ntidudu.Application.exception.UsuarioNaoAutorizadoException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -47,6 +47,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErroResposta handleNoSuchElementException(NoSuchElementException e){
         return ErroResposta.respotaPadrao("Chamado não encontrado");
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErroResposta handleUsernameNotFoundException(UsernameNotFoundException e){
+        return ErroResposta.respotaPadrao("Credenciais inválidas");
     }
 
 

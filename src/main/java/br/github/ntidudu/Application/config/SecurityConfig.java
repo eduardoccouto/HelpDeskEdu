@@ -38,12 +38,13 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             auth -> auth
                .requestMatchers("/login").permitAll()
-               .requestMatchers("/usuarios/**").hasAnyAuthority("ADM")
                .anyRequest().authenticated())
-        .httpBasic(Customizer.withDefaults()) //HTTP Basic
+        .httpBasic(Customizer.withDefaults()) 
         .oauth2ResourceServer(
             conf -> conf.jwt(
-                jwt -> jwt.decoder(jwtDecoder())));
+                jwt -> jwt.decoder(jwtDecoder())))
+                
+        .oauth2Login(Customizer.withDefaults());
     return http.build();
   }
 

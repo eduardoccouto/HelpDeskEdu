@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.github.ntidudu.Application.dto.ChamadoDTO;
 import br.github.ntidudu.Application.entity.Chamado.Chamado;
 import br.github.ntidudu.Application.entity.Chamado.StatusChamado;
-import br.github.ntidudu.Application.exception.ChamadoNaoEncontrado;
 import br.github.ntidudu.Application.mappers.ChamadoMapper;
 import br.github.ntidudu.Application.service.ChamadoService;
 import jakarta.validation.Valid;
