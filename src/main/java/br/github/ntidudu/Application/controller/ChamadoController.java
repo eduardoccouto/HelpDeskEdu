@@ -31,7 +31,7 @@ public class ChamadoController implements GenericController {
     private ChamadoMapper chamadoMapper;
 
     @PreAuthorize("hasAuthority('USUARIO_BASICO')")
-    @PostMapping
+    @PostMapping("v1")
     public ResponseEntity<Object> cadastrarUsuarioBasico(@RequestBody @Valid ChamadoDTO chamadoDTO) {
 
         Chamado chamadoEntity = chamadoMapper.toEntity(chamadoDTO);
@@ -69,7 +69,7 @@ public class ChamadoController implements GenericController {
     }
 
     @PreAuthorize("hasAutority('TECNICO')")
-    @PutMapping("path/{id}")
+    @PutMapping("v1/{id}")
     public ResponseEntity<Object> atualizarStatus(@PathVariable Long id,
             @RequestBody StatusChamado statutChamado) {
 
