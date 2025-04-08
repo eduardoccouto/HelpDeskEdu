@@ -1,12 +1,17 @@
 package br.github.ntidudu.Application.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import br.github.ntidudu.Application.dto.ChamadoDTO;
+import br.github.ntidudu.Application.dto.pesquisaChamadoDTO;
 import br.github.ntidudu.Application.entity.Chamado.Chamado;
+import br.github.ntidudu.Application.entity.Chamado.PrioridadeChamado;
 import br.github.ntidudu.Application.entity.Chamado.StatusChamado;
 import br.github.ntidudu.Application.mappers.ChamadoMapper;
 import br.github.ntidudu.Application.service.ChamadoService;
@@ -32,7 +37,7 @@ public class ChamadoController implements GenericController {
 
     @PreAuthorize("hasAuthority('USUARIO_BASICO')")
     @PostMapping("v1")
-    public ResponseEntity<Object> cadastrarUsuarioBasico(@RequestBody @Valid ChamadoDTO chamadoDTO) {
+    public ResponseEntity<Object> cadastrarChamado(@RequestBody @Valid ChamadoDTO chamadoDTO) {
 
         Chamado chamadoEntity = chamadoMapper.toEntity(chamadoDTO);
 
@@ -46,7 +51,7 @@ public class ChamadoController implements GenericController {
 
     @PreAuthorize("hasAutority('TECNICO')")
     @GetMapping("v1")
-    public ResponseEntity<ChamadoDTO> filtrarChamadoPorID(@RequestParam @Valid Long id) {
+    public ResponseEntity<pesquisaChamadoDTO> filtrarChamadoPorID(@RequestParam @Valid Long id) {
 
         var chamado = chamadoService.buscarChamadoPorId(id)
                 .map(chamadoMapper::toDTO);
@@ -76,6 +81,23 @@ public class ChamadoController implements GenericController {
         chamadoService.atualizarStatusChamadoPorId(id, statutChamado);
 
         return ResponseEntity.ok().build();
+    }
+
+    
+    @PreAuthorize("hasAuthority('Tecnico')")
+    @GetMapping("v2")
+    public ResponseEntity<List<pesquisaChamadoDTO>> pesquisa(
+            @RequestParam(required = false) String titulo,
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) PrioridadeChamado prioridadeChamado,
+            @RequestParam(required = false) StatusChamado statusChamado) {
+
+        var resultado = chamadoService.pesquisa(id, prioridadeChamado, statusChamado, titulo)
+                .stream()
+                .map(chamadoMapper::toDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(resultado);
     }
 
 }

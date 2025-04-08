@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.github.ntidudu.Application.dto.ChamadoDTO;
+import br.github.ntidudu.Application.dto.pesquisaChamadoDTO;
 import br.github.ntidudu.Application.entity.Chamado.Chamado;
 import br.github.ntidudu.Application.entity.Chamado.PrioridadeChamado;
 import br.github.ntidudu.Application.entity.Chamado.StatusChamado;
@@ -18,7 +18,9 @@ import br.github.ntidudu.Application.exception.UsuarioNaoAutorizadoException;
 import br.github.ntidudu.Application.exception.UsuarioNaoLogado;
 import br.github.ntidudu.Application.mappers.ChamadoMapper;
 import br.github.ntidudu.Application.repository.ChamadoRepository;
+import br.github.ntidudu.Application.repository.specs.ChamadoSpecs;
 import br.github.ntidudu.Application.validator.SessionValidator;
+
 
 @Service
 public class ChamadoService {
@@ -74,7 +76,7 @@ public class ChamadoService {
 
     }
 
-    public List<ChamadoDTO> buscarChamadoPorPrioridade(PrioridadeChamado prioridadeChamado) {
+    public List<pesquisaChamadoDTO> buscarChamadoPorPrioridade(PrioridadeChamado prioridadeChamado) {
 
         var sessao = sessionValidator.validarSessao();
 
@@ -87,6 +89,40 @@ public class ChamadoService {
         throw new UsuarioNaoAutorizadoException("Usuário não autorizado");
 
     }
+
+
+    public List<Chamado> pesquisa(
+        Long id,
+        PrioridadeChamado prioridadeChamado,
+        StatusChamado statusChamado,
+        String titulo){
+        
+            Specification<Chamado> specs = Specification.where((_, _, cb) -> cb.conjunction());
+
+            if(id != null){
+                specs = specs.and(ChamadoSpecs.idEqual(id));
+            }
+
+            if(prioridadeChamado != null){
+                specs = specs.and(ChamadoSpecs.prioridadeEqual(prioridadeChamado));
+            }
+
+            if(statusChamado != null){
+                specs = specs.and(ChamadoSpecs.statusChamadoEqual(statusChamado));
+            }
+
+            if(titulo != null){
+                specs = specs.and(ChamadoSpecs.tituloLike(titulo));
+            }
+
+        
+            return chamadoRepository.findAll(specs);
+
+
+        
+        
+    }
+
 
     public List<Chamado> buscarChamadoPorTitulo(String titulo) {
         return chamadoRepository.findAllByTitulo(titulo);

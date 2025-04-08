@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.github.ntidudu.Application.dto.UsuarioDTO;
 
 import br.github.ntidudu.Application.entity.Usuario.Usuario;
+import br.github.ntidudu.Application.mappers.UsuarioMapper;
 import br.github.ntidudu.Application.service.UsuarioService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,10 +25,14 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private UsuarioMapper usuarioMapper;
+
+
     @PreAuthorize("hasAuthority('ADM')")
     @PostMapping("cadastro")
     public ResponseEntity<Void> cadastrarUsuarioBasico(@RequestBody UsuarioDTO entity) {
-        Usuario usuarioEntity = entity.mapearUsuarioBasico();
+        Usuario usuarioEntity = usuarioMapper.toDTO(entity) ;
   
         usuarioService.cadastrarUsuario(usuarioEntity);
 

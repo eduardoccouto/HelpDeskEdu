@@ -10,19 +10,16 @@ import jakarta.validation.constraints.Size;
 
 public record ChamadoDTO(
 
-                @NotBlank @Size(min = 5, max = 200, message = "Campo fora do padrão") String titulo,
+        @NotBlank @Size(min = 5, max = 200, message = "Campo fora do padrão") String titulo,
 
-                @NotBlank(message = "campo obrigatorio") String descricao,
+        @NotBlank(message = "campo obrigatorio") String descricao,
 
-                @NotNull PrioridadeChamado prioridade,
+        @NotNull PrioridadeChamado prioridade,
 
-                StatusChamado status,
-
-                LocalDateTime criacao,
-                LocalDateTime atualizacao
+        StatusChamado status,
+        LocalDateTime criacao,
+        LocalDateTime atualizacao
 
 ) {
-
-
 
 }
