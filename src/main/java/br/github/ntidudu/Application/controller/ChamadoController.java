@@ -83,8 +83,7 @@ public class ChamadoController implements GenericController {
         return ResponseEntity.ok().build();
     }
 
-    
-    @PreAuthorize("hasAuthority('Tecnico')")
+    @PreAuthorize("hasAuthority('TECNICO')")
     @GetMapping("v2")
     public ResponseEntity<List<pesquisaChamadoDTO>> pesquisa(
             @RequestParam(required = false) String titulo,

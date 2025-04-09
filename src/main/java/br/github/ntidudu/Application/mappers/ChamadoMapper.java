@@ -20,6 +20,7 @@ public abstract class ChamadoMapper {
     @Mapping(target = "usuario", ignore = true)
     public abstract Chamado toEntity(ChamadoDTO chamadoDTO);
 
+    // @Mapping(target = "usuario", expression = "java(chamado.getUsuario().getNome())")
     public abstract pesquisaChamadoDTO toDTO(Chamado chamado);
 
     

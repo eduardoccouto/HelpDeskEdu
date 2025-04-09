@@ -32,7 +32,7 @@ public class UsuarioController {
     @PreAuthorize("hasAuthority('ADM')")
     @PostMapping("cadastro")
     public ResponseEntity<Void> cadastrarUsuarioBasico(@RequestBody UsuarioDTO entity) {
-        Usuario usuarioEntity = usuarioMapper.toDTO(entity) ;
+        Usuario usuarioEntity = usuarioMapper.toEntity(entity) ;
   
         usuarioService.cadastrarUsuario(usuarioEntity);
 

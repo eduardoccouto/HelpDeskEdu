@@ -13,7 +13,7 @@ public record pesquisaChamadoDTO(
         StatusChamado status,
         LocalDateTime criacao,
         LocalDateTime atualizacao,
-        UsuarioDTO usuario,
+        usuarioResponseDTO usuario,
         String descricao
 
 ) {
