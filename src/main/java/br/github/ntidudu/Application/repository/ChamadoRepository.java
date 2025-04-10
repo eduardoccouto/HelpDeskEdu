@@ -14,7 +14,7 @@ public interface ChamadoRepository extends JpaRepository<Chamado, Long>, JpaSpec
     @Query(
         """
         SELECT c from Chamado c where c.prioridade =:prioridadeChamado
-                """
+        """
     )
     List<Chamado> findAllByPrioridadeChamado(PrioridadeChamado prioridadeChamado);
 

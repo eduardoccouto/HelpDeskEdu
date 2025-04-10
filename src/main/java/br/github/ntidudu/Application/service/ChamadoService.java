@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,11 +94,14 @@ public class ChamadoService {
     }
 
 
-    public List<Chamado> pesquisa(
+    public Page<Chamado> pesquisa(
         Long id,
         PrioridadeChamado prioridadeChamado,
         StatusChamado statusChamado,
-        String titulo){
+        String titulo,
+        String nome_usuario,
+        Integer pagina,
+        Integer tamanhoPagina){
         
             Specification<Chamado> specs = Specification.where((_, _, cb) -> cb.conjunction());
 
@@ -115,8 +121,13 @@ public class ChamadoService {
                 specs = specs.and(ChamadoSpecs.tituloLike(titulo));
             }
 
-        
-            return chamadoRepository.findAll(specs);
+            if(nome_usuario != null) {
+                specs = specs.and(ChamadoSpecs.nomeUsuarioLike(nome_usuario));
+            }
+
+            Pageable pageRequest = PageRequest.of(pagina, tamanhoPagina);
+
+            return chamadoRepository.findAll(specs, pageRequest);
 
 
         
