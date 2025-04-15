@@ -3,6 +3,8 @@ package br.github.ntidudu.Application.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import br.github.ntidudu.Application.entity.Usuario.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,13 +42,13 @@ public class ChamadoService {
     @Transactional
     public Chamado cadastrarChamado(Chamado chamado) {
 
-        var sessao = sessionValidator.validarSessao();
+        Usuario usuario_logado = sessionValidator.validarSessao();
 
-        if (sessao != null) {
+        if (usuario_logado != null) {
 
             chamado.setStatus(StatusChamado.ABERTO);
             chamado.setCriacao(LocalDateTime.now());
-            chamado.setUsuario(sessao);
+            chamado.setUsuario(usuario_logado);
             return chamadoRepository.save(chamado);
         }
 

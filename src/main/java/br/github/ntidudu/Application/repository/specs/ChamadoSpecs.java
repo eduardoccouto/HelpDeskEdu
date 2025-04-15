@@ -27,7 +27,7 @@ public class ChamadoSpecs {
     }
 
     public static Specification<Chamado> nomeUsuarioLike(String nome_usuario){
-        return (root, query, cb) -> {
+        return (root, _, cb) -> {
             Join<Object, Object> joinUsuario = root.join("usuario", JoinType.INNER);
             return cb.like(cb.upper(joinUsuario.get("nome")), "%" + nome_usuario.toUpperCase() + "%");
         };

@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -34,18 +36,29 @@ public class SecurityConfig {
 
   @Bean
   SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf(csrf -> csrf.disable())
+    http.csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
             auth -> auth
-               .requestMatchers("/login").permitAll()
-               .anyRequest().authenticated())
-        .httpBasic(Customizer.withDefaults()) 
+                .requestMatchers("/login").permitAll()
+                .anyRequest().authenticated())
+        .httpBasic(Customizer.withDefaults())
         .oauth2ResourceServer(
             conf -> conf.jwt(
-                jwt -> jwt.decoder(jwtDecoder())))
-                
-        .oauth2Login(Customizer.withDefaults());
+                jwt -> jwt.decoder(jwtDecoder())));
     return http.build();
+  }
+
+  @Bean
+  WebSecurityCustomizer webSecurityCustomizer() {
+    return web -> web.ignoring().requestMatchers(
+        "/v2/api-docs/**",
+        "/v3/api-docs/**",
+        "/swagger-resources/**",
+        "/swagger-ui.html",
+        "/swagger-ui/**",
+        "/webjars/**",
+        "/context-path/**");
+
   }
 
   @Bean
@@ -65,5 +78,4 @@ public class SecurityConfig {
     return new NimbusJwtEncoder(jwks);
   }
 
-  
 }

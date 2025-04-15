@@ -1,8 +1,5 @@
 package br.github.ntidudu.Application.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +13,10 @@ import br.github.ntidudu.Application.entity.Chamado.PrioridadeChamado;
 import br.github.ntidudu.Application.entity.Chamado.StatusChamado;
 import br.github.ntidudu.Application.mappers.ChamadoMapper;
 import br.github.ntidudu.Application.service.ChamadoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("chamados")
+@Tag(name = "Chamados")
 public class ChamadoController implements GenericController {
 
     @Autowired
@@ -36,7 +38,12 @@ public class ChamadoController implements GenericController {
     @Autowired
     private ChamadoMapper chamadoMapper;
 
-    @PreAuthorize("hasAuthority('USUARIO_BASICO')")
+    @Operation(summary = "Cadastrar", description = "Cadastra novos chamados no sistema")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Cadastrado com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação")
+    })
+    @PreAuthorize("hasAnyAuthority('TECNICO', 'ADM', 'USUARIO_BASICO')")
     @PostMapping("v1")
     public ResponseEntity<Object> cadastrarChamado(@RequestBody @Valid ChamadoDTO chamadoDTO) {
 
@@ -50,6 +57,7 @@ public class ChamadoController implements GenericController {
 
     }
 
+    @Deprecated
     @PreAuthorize("hasAutority('TECNICO')")
     @GetMapping("v1")
     public ResponseEntity<pesquisaChamadoDTO> filtrarChamadoPorID(@RequestParam @Valid Long id) {
@@ -61,6 +69,11 @@ public class ChamadoController implements GenericController {
 
     }
 
+    @Operation(summary = "Deletar chamado", description = "Deleta chamados no sistema")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Chamado não encontrado")
+    })
     @PreAuthorize("hasAutority('TECNICO')")
     @DeleteMapping("v1/{id}")
     public ResponseEntity<?> deletarChamadoPorId(@PathVariable Long id) {
@@ -74,6 +87,11 @@ public class ChamadoController implements GenericController {
 
     }
 
+    @Operation(summary = "Atualizar", description = "Atualiza chamados no sistema")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Cadastrado com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação")
+    })
     @PreAuthorize("hasAutority('TECNICO')")
     @PutMapping("v1/{id}")
     public ResponseEntity<Object> atualizarStatus(@PathVariable Long id,
@@ -84,7 +102,7 @@ public class ChamadoController implements GenericController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasAuthority('TECNICO')")
+    @PreAuthorize("hasAnyAuthority('TECNICO', 'ADM')")
     @GetMapping("v2")
     public ResponseEntity<Page<pesquisaChamadoDTO>> pesquisa(
             @RequestParam(required = false) String titulo,
@@ -96,12 +114,12 @@ public class ChamadoController implements GenericController {
             @RequestParam(required = false, defaultValue = "10") Integer tamanhoPagina) {
 
         var paginaResultado = chamadoService.pesquisa(id,
-                        prioridadeChamado,
-                        statusChamado,
-                        titulo,
-                        nome_usuario,
-                        pagina,
-                        tamanhoPagina)
+                prioridadeChamado,
+                statusChamado,
+                titulo,
+                nome_usuario,
+                pagina,
+                tamanhoPagina)
                 .map(chamadoMapper::toDTO);
 
         return ResponseEntity.ok(paginaResultado);

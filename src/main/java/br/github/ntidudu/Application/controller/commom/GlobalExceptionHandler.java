@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import br.github.ntidudu.Application.dto.ErroCampo;
 import br.github.ntidudu.Application.dto.ErroResposta;
 
+
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

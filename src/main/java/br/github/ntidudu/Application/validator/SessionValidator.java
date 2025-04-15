@@ -15,11 +15,9 @@ public class SessionValidator {
          Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 
-         if (authentication != null && authentication.getPrincipal() instanceof UserAuthenticade) {
-            UserAuthenticade userDetails = (UserAuthenticade) authentication.getPrincipal();
-            Usuario usuario_logado = userDetails.getUsuario();
+         if (authentication != null && authentication.getPrincipal() instanceof UserAuthenticade userDetails) {
 
-            return usuario_logado;
+             return userDetails.getUsuario();
         }
         
         return null;
