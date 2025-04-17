@@ -32,14 +32,14 @@ public class UsuarioController {
     @PreAuthorize("hasAuthority('ADM')")
     @PostMapping("cadastro")
     public ResponseEntity<Void> cadastrarUsuarioBasico(@RequestBody UsuarioDTO entity) {
-        Usuario usuarioEntity = usuarioMapper.toEntity(entity) ;
+        Usuario newUser = usuarioMapper.toEntity(entity) ;
   
-        usuarioService.cadastrarUsuario(usuarioEntity);
+        usuarioService.cadastrarUsuario(newUser);
 
         URI location = ServletUriComponentsBuilder
         .fromCurrentRequest()
         .path("{id}")
-        .buildAndExpand(usuarioEntity.getId())
+        .buildAndExpand(newUser.getId())
         .toUri();
 
         return ResponseEntity.created(location).build();

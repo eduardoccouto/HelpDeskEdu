@@ -71,10 +71,10 @@ public class ChamadoController implements GenericController {
 
     @Operation(summary = "Deletar chamado", description = "Deleta chamados no sistema")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Deletado com sucesso"),
+            @ApiResponse(responseCode = "204", description = "No content"),
             @ApiResponse(responseCode = "404", description = "Chamado não encontrado")
     })
-    @PreAuthorize("hasAutority('TECNICO')")
+    @PreAuthorize("hasAnyAuthority('TECNICO', 'ADM')")
     @DeleteMapping("v1/{id}")
     public ResponseEntity<?> deletarChamadoPorId(@PathVariable Long id) {
 
@@ -92,7 +92,7 @@ public class ChamadoController implements GenericController {
             @ApiResponse(responseCode = "201", description = "Cadastrado com sucesso"),
             @ApiResponse(responseCode = "422", description = "Erro de validação")
     })
-    @PreAuthorize("hasAutority('TECNICO')")
+    @PreAuthorize("hasAnyAuthority('TECNICO', 'ADM')")
     @PutMapping("v1/{id}")
     public ResponseEntity<Object> atualizarStatus(@PathVariable Long id,
             @RequestBody StatusChamado statutChamado) {

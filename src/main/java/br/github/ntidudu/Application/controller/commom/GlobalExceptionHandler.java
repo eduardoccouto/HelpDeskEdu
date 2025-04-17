@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -55,6 +56,14 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErroResposta handleUsernameNotFoundException(UsernameNotFoundException e){
         return ErroResposta.respotaPadrao("Credenciais inválidas");
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErroResposta handleDataIntegrityViolationException(DataIntegrityViolationException e){
+
+            
+        return new ErroResposta(HttpStatus.CONFLICT.value(), "Erro de integridade nos dados" ,  null);
     }
 
 
