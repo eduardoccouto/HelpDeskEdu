@@ -62,7 +62,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErroResposta handleDataIntegrityViolationException(DataIntegrityViolationException e){
 
-            
         return new ErroResposta(HttpStatus.CONFLICT.value(), "Erro de integridade nos dados" ,  null);
     }
 

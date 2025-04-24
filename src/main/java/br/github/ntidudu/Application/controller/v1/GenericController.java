@@ -1,4 +1,4 @@
-package br.github.ntidudu.Application.controller;
+package br.github.ntidudu.Application.controller.v1;
 
 import java.net.URI;
 

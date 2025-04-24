@@ -16,7 +16,7 @@ public record ChamadoDTO(
 
         @NotBlank(message = "campo obrigatorio") String descricao,
 
-        @NotNull PrioridadeChamado prioridade,
+        @NotNull(message = "campo vazio!") PrioridadeChamado prioridade,
 
         StatusChamado status,
         LocalDateTime criacao,

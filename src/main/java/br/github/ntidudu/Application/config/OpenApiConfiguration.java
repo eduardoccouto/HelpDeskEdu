@@ -10,4 +10,5 @@ import io.swagger.v3.oas.annotations.info.Info;
 @OpenAPIDefinition(info = @Info(title = "HelPEdu API", version = "v1", contact = @Contact(name = "Eduardo Couto", email = "coutoeduardo858@gmail.com")))
 public class OpenApiConfiguration {
 
+
 }

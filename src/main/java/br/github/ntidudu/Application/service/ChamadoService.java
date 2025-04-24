@@ -42,7 +42,7 @@ public class ChamadoService {
     @Transactional
     public Chamado cadastrarChamado(Chamado chamado) {
 
-        Usuario usuario_logado = sessionValidator.validarSessao();
+        Usuario usuario_logado = sessionValidator.getUserSession();
 
         if (usuario_logado != null) {
 
@@ -83,7 +83,7 @@ public class ChamadoService {
 
     public List<pesquisaChamadoDTO> buscarChamadoPorPrioridade(PrioridadeChamado prioridadeChamado) {
 
-        var sessao = sessionValidator.validarSessao();
+        var sessao = sessionValidator.getUserSession();
 
         if (sessao.getFuncao().contains(FuncaoUsuario.TECNICO)) {
             return chamadoRepository.findAllByPrioridadeChamado(prioridadeChamado)
@@ -98,7 +98,7 @@ public class ChamadoService {
 
     public Page<Chamado> pesquisa(
         Long id,
-        PrioridadeChamado prioridadeChamado,
+        PrioridadeChamado prioridade,
         StatusChamado statusChamado,
         String titulo,
         String nome_usuario,
@@ -111,8 +111,8 @@ public class ChamadoService {
                 specs = specs.and(ChamadoSpecs.idEqual(id));
             }
 
-            if(prioridadeChamado != null){
-                specs = specs.and(ChamadoSpecs.prioridadeEqual(prioridadeChamado));
+            if(prioridade != null){
+                specs = specs.and(ChamadoSpecs.prioridadeEqual(prioridade));
             }
 
             if(statusChamado != null){

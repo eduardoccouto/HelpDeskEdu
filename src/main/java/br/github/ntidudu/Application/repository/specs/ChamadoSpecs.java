@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 import br.github.ntidudu.Application.entity.Chamado.Chamado;
 import br.github.ntidudu.Application.entity.Chamado.PrioridadeChamado;
 import br.github.ntidudu.Application.entity.Chamado.StatusChamado;
+import br.github.ntidudu.Application.entity.Usuario.Usuario;
 
 public class ChamadoSpecs {
 
@@ -18,18 +19,18 @@ public class ChamadoSpecs {
         return (root, _, cb) -> cb.like(cb.upper(root.get("titulo")), "%" + titulo.toUpperCase() + "%");
     }
 
-    public static Specification<Chamado> prioridadeEqual(PrioridadeChamado prioridadeChamado){
-        return (root, _, cb) -> cb.equal(root.get("prioridadeChamado"), prioridadeChamado);
+    public static Specification<Chamado> prioridadeEqual(PrioridadeChamado prioridade){
+        return (root, _, cb) -> cb.equal(root.get("prioridade"), prioridade);
     }
 
-    public static Specification<Chamado> statusChamadoEqual(StatusChamado statusChamado){
-        return (root, _, cb) -> cb.equal(root.get("statusChamado"), statusChamado);
+    public static Specification<Chamado> statusChamadoEqual(StatusChamado status){
+        return (root, _, cb) -> cb.equal(root.get("status"), status);
     }
 
-    public static Specification<Chamado> nomeUsuarioLike(String nome_usuario){
+    public static Specification<Chamado> nomeUsuarioLike(String nome){
         return (root, _, cb) -> {
-            Join<Object, Object> joinUsuario = root.join("usuario", JoinType.INNER);
-            return cb.like(cb.upper(joinUsuario.get("nome")), "%" + nome_usuario.toUpperCase() + "%");
+            Join<Usuario, Chamado> joinUsuario = root.join("usuario", JoinType.INNER);
+            return cb.like(cb.upper(joinUsuario.get("username")), "%" + nome  + "%");
         };
 
     }

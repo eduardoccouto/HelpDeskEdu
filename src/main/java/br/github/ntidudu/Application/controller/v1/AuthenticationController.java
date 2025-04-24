@@ -1,4 +1,4 @@
-package br.github.ntidudu.Application.controller;
+package br.github.ntidudu.Application.controller.v1;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,8 +15,7 @@ public class AuthenticationController {
   private AuthenticationService authenticationService;
 
   @PostMapping("login")
-  public String authenticate(
-      Authentication authentication) {
+  public String authenticate(Authentication authentication) {
     return authenticationService.authenticate(authentication);
   }
 }

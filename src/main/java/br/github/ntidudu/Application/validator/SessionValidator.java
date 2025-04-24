@@ -10,7 +10,7 @@ import br.github.ntidudu.Application.security.UserAuthenticade;
 @Component
 public class SessionValidator {
     
-    public Usuario validarSessao(){
+    public Usuario getUserSession(){
 
          Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
