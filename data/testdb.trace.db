@@ -1,0 +1,3 @@
+2025-05-07 10:58:41.499529-03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USUARIO" not found (this database is empty); SQL statement:
+INSERT INTO USUARIO (ID, EMAIL, NOME, PASSWORD, USERNAME) VALUES (1, 'email@email.com', 'EDUARDO', '$2y$10$SpfHja/.DG7twEBC719/qOWVmSzZk5NLKfq99lvc2/NAH3P2tlMQ2', 'ntidudu') [42104-232]

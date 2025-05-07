@@ -3,7 +3,9 @@ package br.github.ntidudu.Application.controller.v2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +18,8 @@ import br.github.ntidudu.Application.mappers.ChamadoMapper;
 import br.github.ntidudu.Application.service.ChamadoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+
+@EnableMethodSecurity
 @RestController
 @RequestMapping("api/v2/chamados")
 @Tag(name = "Chamados - v2", description = "Operação da versão 2")
@@ -27,8 +31,8 @@ public class ChamadoController {
     @Autowired
     ChamadoMapper chamadoMapper;
 
-    @PreAuthorize("hasAnyAutority('TECNICO', 'ADM')")
-    @GetMapping("v2")
+   @PreAuthorize("hasAuthority('ROLE_ADM')")
+    @GetMapping
     public ResponseEntity<Page<pesquisaChamadoDTO>> pesquisa(
             @RequestParam(required = false) String titulo,
             @RequestParam(required = false) Long id,

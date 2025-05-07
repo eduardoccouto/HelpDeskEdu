@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,10 +41,10 @@ public class GlobalExceptionHandler {
         return  ErroResposta.conflito(e.getMessage());
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErroResposta HandleUsuarioNaoAutorizadoException(AccessDeniedException e){
-        return ErroResposta.respotaPadrao("Acesso negado");
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErroResposta handleAuthorizationDeniedException(AuthorizationDeniedException e){
+        return new ErroResposta(401,"Acesso negado", null);
     }
 
     @ExceptionHandler(NoSuchElementException.class)

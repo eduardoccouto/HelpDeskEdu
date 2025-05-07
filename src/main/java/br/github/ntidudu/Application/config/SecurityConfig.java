@@ -40,6 +40,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             auth -> auth
                 .requestMatchers("/login").permitAll()
+                //.requestMatchers("/helloworld").hasAuthority("USUARIO_BASICO")
                 .anyRequest().authenticated())
         .httpBasic(Customizer.withDefaults())
         .oauth2ResourceServer(
@@ -52,6 +53,7 @@ public class SecurityConfig {
   WebSecurityCustomizer webSecurityCustomizer() {
     return web -> web.ignoring().requestMatchers(
         "/v2/api-docs/**",
+        "/h2-console/**",
         "/v3/api-docs/**",
         "/swagger-resources/**",
         "/swagger-ui.html",

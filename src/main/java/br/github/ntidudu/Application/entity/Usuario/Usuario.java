@@ -27,9 +27,8 @@ public class Usuario {
 
     @ElementCollection(targetClass = FuncaoUsuario.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
-    private Collection<FuncaoUsuario> funcao;
+    private List<FuncaoUsuario> funcao;
 
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Chamado> chamados;
@@ -86,7 +85,7 @@ public class Usuario {
     }
 
     public Usuario(Long id, String nome, String username, String password, String email,
-            Collection<FuncaoUsuario> funcao, List<Chamado> chamados) {
+            List<FuncaoUsuario> funcao, List<Chamado> chamados) {
         this.id = id;
         this.nome = nome;
         this.username = username;
@@ -125,7 +124,7 @@ public class Usuario {
         return funcao;
     }
 
-    public void setFuncao(Collection<FuncaoUsuario> funcao) {
+    public void setFuncao(List<FuncaoUsuario> funcao) {
         this.funcao = funcao;
     }
 

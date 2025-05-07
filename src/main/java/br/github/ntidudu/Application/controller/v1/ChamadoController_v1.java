@@ -3,6 +3,7 @@ package br.github.ntidudu.Application.controller.v1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import br.github.ntidudu.Application.dto.ChamadoDTO;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
+@EnableMethodSecurity
 @RequestMapping("api/v1/chamados")
 @Tag(name = "Chamados - v1", description = "Operações da versão 1")
 public class ChamadoController_v1 implements GenericController {
@@ -41,7 +43,7 @@ public class ChamadoController_v1 implements GenericController {
             @ApiResponse(responseCode = "201", description = "Cadastrado com sucesso"),
             @ApiResponse(responseCode = "422", description = "Erro de validação")
     })
-    @PreAuthorize("hasAnyAutority('USUARIO_BASICO', 'ADM', 'TECNICO')")
+    @PreAuthorize("hasAnyAuthority('USUARIO_BASICO', 'ADM', 'TECNICO')")
     @PostMapping
     public ResponseEntity<Object> cadastrarChamado(@RequestBody @Valid ChamadoDTO chamadoDTO) {
 
@@ -55,8 +57,9 @@ public class ChamadoController_v1 implements GenericController {
 
     }
 
+
     @Deprecated
-    @PreAuthorize("hasAutority('TECNICO')")
+    @PreAuthorize("hasAuthority('TECNICO')")
     @GetMapping
     public ResponseEntity<pesquisaChamadoDTO> filtrarChamadoPorID(@RequestParam @Valid Long id) {
 
@@ -72,7 +75,7 @@ public class ChamadoController_v1 implements GenericController {
             @ApiResponse(responseCode = "204", description = "No content"),
             @ApiResponse(responseCode = "404", description = "Chamado não encontrado")
     })
-    @PreAuthorize("hasAnyAutority('TECNICO', 'ADM')")
+    @PreAuthorize("hasAnyAuthority('TECNICO', 'ADM')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarChamadoPorId(@PathVariable Long id) {
 
@@ -90,7 +93,7 @@ public class ChamadoController_v1 implements GenericController {
             @ApiResponse(responseCode = "201", description = "Cadastrado com sucesso"),
             @ApiResponse(responseCode = "422", description = "Erro de validação")
     })
-    @PreAuthorize("hasAnyAutority('TECNICO', 'ADM')")
+    @PreAuthorize("hasAnyAuthority('TECNICO', 'ADM')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> atualizarStatus(@PathVariable Long id,
             @RequestBody StatusChamado statutChamado) {
