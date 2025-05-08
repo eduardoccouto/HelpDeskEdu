@@ -51,6 +51,10 @@ public class Chamado {
         this.usuario = usuario;
     }
 
+    public Chamado(){
+        
+    }
+
     public Long getId() {
         return id;
     }

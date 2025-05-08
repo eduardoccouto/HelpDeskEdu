@@ -1,23 +1,14 @@
 package br.github.ntidudu.Application.dto;
 
+import java.util.Collection;
+
 import br.github.ntidudu.Application.entity.Usuario.FuncaoUsuario;
-import br.github.ntidudu.Application.entity.Usuario.Usuario;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-public record UsuarioDTO(String nome, String usuario, String senha, String email, FuncaoUsuario funcao) {
+@Schema(name = "Usuario")
+public record UsuarioDTO(Long id, String nome, String username, String password, String email, Collection<FuncaoUsuario> funcao) {
 
-    public Usuario mapearUsuarioBasico(){
-
-        Usuario new_usuario = new Usuario();
-        new_usuario.setUsuario(usuario);
-        new_usuario.setNome(nome);
-        new_usuario.setEmail(email);
-        new_usuario.setSenha(senha);
-        new_usuario.setFuncao(funcao);
-
-        return new_usuario;
-        
-        
-    }
+  
 
 }
 
