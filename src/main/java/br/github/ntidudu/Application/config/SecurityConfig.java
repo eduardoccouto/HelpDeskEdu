@@ -6,7 +6,9 @@ import java.security.interfaces.RSAPublicKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -40,7 +42,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             auth -> auth
                 .requestMatchers("/login").permitAll()
-                //.requestMatchers("/helloworld").hasAuthority("USUARIO_BASICO")
+                .requestMatchers("/auth").permitAll()
                 .anyRequest().authenticated())
         .httpBasic(Customizer.withDefaults())
         .oauth2ResourceServer(
@@ -80,4 +82,18 @@ public class SecurityConfig {
     return new NimbusJwtEncoder(jwks);
   }
 
+  @Bean
+  AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    return config.getAuthenticationManager();
+  }
+
+
+  // @Bean
+  // AuthenticationManager authenticationManager(UserDetailsService userDetailsService, 
+  //   PasswordEncoder passwordEncoder){
+  //     DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+  //     authenticationProvider.setUserDetailsService(userDetailsService);
+  //     authenticationProvider.setPasswordEncoder(passwordEncoder);
+  //     return new ProviderManager(authenticationProvider);
+  //   }
 }

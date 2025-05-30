@@ -1,6 +1,7 @@
 package br.github.ntidudu.Application.controller.v1;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -57,7 +58,6 @@ public class ChamadoController_v1 implements GenericController {
 
     }
 
-
     @Deprecated
     @PreAuthorize("hasAuthority('TECNICO')")
     @GetMapping
@@ -103,6 +103,21 @@ public class ChamadoController_v1 implements GenericController {
         return ResponseEntity.ok().build();
     }
 
+    
+    @Operation(summary = "Listar", description = "Lista os chamados abertos pelo usuário logado.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200")
+    })
+    @Cacheable("meus-chamados")
+    @GetMapping("/meus-chamados")
+    public ResponseEntity<Object> getMeusChamados(
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size) {
 
+        var chamados = chamadoService.meusChamdos(page, size).map(chamadoMapper::toDTO);
+
+        return ResponseEntity.ok(chamados);
+
+    }
 
 }

@@ -1,6 +1,5 @@
 package br.github.ntidudu.Application.controller.commom;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -67,6 +66,11 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(NullPointerException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErroResposta handleNullPointerException(NullPointerException e){
+        return ErroResposta.respotaPadrao("Null data");
+    }
 
 
 

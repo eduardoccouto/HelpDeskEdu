@@ -3,9 +3,9 @@ package br.github.ntidudu.Application.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 import br.github.ntidudu.Application.entity.Usuario.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +25,6 @@ import br.github.ntidudu.Application.mappers.ChamadoMapper;
 import br.github.ntidudu.Application.repository.ChamadoRepository;
 import br.github.ntidudu.Application.repository.specs.ChamadoSpecs;
 import br.github.ntidudu.Application.validator.SessionValidator;
-
 
 @Service
 public class ChamadoService {
@@ -95,49 +94,58 @@ public class ChamadoService {
 
     }
 
-
+    @Cacheable("chamados")
     public Page<Chamado> pesquisa(
-        Long id,
-        PrioridadeChamado prioridade,
-        StatusChamado statusChamado,
-        String titulo,
-        String nome_usuario,
-        Integer pagina,
-        Integer tamanhoPagina){
-        
-            Specification<Chamado> specs = Specification.where((_, _, cb) -> cb.conjunction());
+            Long id,
+            PrioridadeChamado prioridade,
+            StatusChamado statusChamado,
+            String titulo,
+            String nome_usuario,
+            Integer pagina,
+            Integer tamanhoPagina) {
 
-            if(id != null){
-                specs = specs.and(ChamadoSpecs.idEqual(id));
-            }
+        Specification<Chamado> specs = Specification.where((_, _, cb) -> cb.conjunction());
 
-            if(prioridade != null){
-                specs = specs.and(ChamadoSpecs.prioridadeEqual(prioridade));
-            }
+        if (id != null) {
+            specs = specs.and(ChamadoSpecs.idEqual(id));
+        }
 
-            if(statusChamado != null){
-                specs = specs.and(ChamadoSpecs.statusChamadoEqual(statusChamado));
-            }
+        if (prioridade != null) {
+            specs = specs.and(ChamadoSpecs.prioridadeEqual(prioridade));
+        }
 
-            if(titulo != null){
-                specs = specs.and(ChamadoSpecs.tituloLike(titulo));
-            }
+        if (statusChamado != null) {
+            specs = specs.and(ChamadoSpecs.statusChamadoEqual(statusChamado));
+        }
 
-            if(nome_usuario != null) {
-                specs = specs.and(ChamadoSpecs.nomeUsuarioLike(nome_usuario));
-            }
+        if (titulo != null) {
+            specs = specs.and(ChamadoSpecs.tituloLike(titulo));
+        }
 
-            Pageable pageRequest = PageRequest.of(pagina, tamanhoPagina);
+        if (nome_usuario != null) {
+            specs = specs.and(ChamadoSpecs.nomeUsuarioLike(nome_usuario));
+        }
 
-            return chamadoRepository.findAll(specs, pageRequest);
+        Pageable pageRequest = PageRequest.of(pagina, tamanhoPagina);
 
+        return chamadoRepository.findAll(specs, pageRequest);
 
-        
-        
     }
 
+    public List<Chamado> buscarChamadoPorTitulo(String titulo, Integer pagina, Integer tamanhoPagina) {
 
-    public List<Chamado> buscarChamadoPorTitulo(String titulo) {
-        return chamadoRepository.findAllByTitulo(titulo);
+        Pageable pageRequest = PageRequest.of(pagina, tamanhoPagina);
+
+        return chamadoRepository.findAllByTitulo(titulo, pageRequest);
+    }
+
+    public Page<Chamado> meusChamdos(Integer page, Integer size) {
+        
+        Pageable pageable = PageRequest.of(page, size);
+        var session = sessionValidator.getUserSession();
+        if (session == null) {
+            throw new UsuarioNaoAutorizadoException("Session is empty");
+        }
+        return chamadoRepository.findAllByUsuario(session, pageable);
     }
 }

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("usuarios")
+@RequestMapping("api/v1/usuarios")
 public class UsuarioController {
     
     @Autowired

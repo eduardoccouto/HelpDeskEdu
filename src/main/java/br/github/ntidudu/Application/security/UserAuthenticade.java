@@ -1,10 +1,8 @@
 package br.github.ntidudu.Application.security;
 
 import java.util.Collection;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import br.github.ntidudu.Application.entity.Usuario.Usuario;
 
 public class UserAuthenticade implements UserDetails {
-
 
   private final Usuario usuario;
 

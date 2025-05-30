@@ -9,17 +9,16 @@ import br.github.ntidudu.Application.security.UserAuthenticade;
 
 @Component
 public class SessionValidator {
-    
-    public Usuario getUserSession(){
 
-         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public Usuario getUserSession() {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-         if (authentication != null && authentication.getPrincipal() instanceof UserAuthenticade userDetails) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserAuthenticade userDetails) {
 
-             return userDetails.getUsuario();
+            return userDetails.getUsuario();
         }
-        
+
         return null;
 
     }

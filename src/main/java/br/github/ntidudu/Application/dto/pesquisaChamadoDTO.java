@@ -1,5 +1,6 @@
 package br.github.ntidudu.Application.dto;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import br.github.ntidudu.Application.entity.Chamado.PrioridadeChamado;
@@ -18,6 +19,6 @@ public record pesquisaChamadoDTO(
         usuarioResponseDTO usuario,
         String descricao
 
-) {
+) implements Serializable {
 
 }

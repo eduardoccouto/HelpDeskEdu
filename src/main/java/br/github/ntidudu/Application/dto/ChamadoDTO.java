@@ -1,5 +1,6 @@
 package br.github.ntidudu.Application.dto;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import br.github.ntidudu.Application.entity.Chamado.PrioridadeChamado;
@@ -12,16 +13,16 @@ import jakarta.validation.constraints.Size;
 @Schema(name = "Chamado")
 public record ChamadoDTO(
 
-        @NotBlank @Size(min = 5, max = 200, message = "Campo fora do padrão") String titulo,
+                @NotBlank @Size(min = 5, max = 200, message = "Campo fora do padrão") String titulo,
 
-        @NotBlank(message = "campo obrigatorio") String descricao,
+                @NotBlank(message = "campo obrigatorio") String descricao,
 
-        @NotNull(message = "campo vazio!") PrioridadeChamado prioridade,
+                @NotNull(message = "campo vazio!") PrioridadeChamado prioridade,
 
-        StatusChamado status,
-        LocalDateTime criacao,
-        LocalDateTime atualizacao
+                StatusChamado status,
+                LocalDateTime criacao,
+                LocalDateTime atualizacao
 
-) {
+) implements Serializable {
 
 }

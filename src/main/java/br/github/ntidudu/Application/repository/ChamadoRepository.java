@@ -2,8 +2,11 @@ package br.github.ntidudu.Application.repository;
 
 import br.github.ntidudu.Application.entity.Chamado.Chamado;
 import br.github.ntidudu.Application.entity.Chamado.PrioridadeChamado;
+import br.github.ntidudu.Application.entity.Usuario.Usuario;
+
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -21,7 +24,9 @@ public interface ChamadoRepository extends JpaRepository<Chamado, Long>, JpaSpec
     @Query("""
             SELECT c from Chamado c where c.titulo like :titulo
             """)
-    List<Chamado> findAllByTitulo(@Param("titulo") String titulo);
+    List<Chamado> findAllByTitulo(@Param("titulo") String titulo, org.springframework.data.domain.Pageable pageable);
+
+    Page<Chamado> findAllByUsuario(Usuario usuario, org.springframework.data.domain.Pageable pageable);
 
     
 }
