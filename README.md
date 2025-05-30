@@ -12,7 +12,10 @@ Uma API para gerenciamento de chamados de helpdesk, desenvolvida com o objetivo 
 - Lombok
 - Swagger / OpenAPI
 - Maven
-
+- Redis
+- Spring Secutiry
+- Jwt
+  
 ## 🎯 Objetivos Educacionais
 
 - Criação de endpoints RESTful
