@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.github.ntidudu.Application.dto.loginDTO;
 import br.github.ntidudu.Application.service.AuthenticationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestBody;
-
+@Tag(name = "Autenticação")
 @RestController
 public class AuthenticationController {
   @Autowired
@@ -26,12 +28,14 @@ public class AuthenticationController {
     this.authenticationManager = authenticationManager;
   }
 
+  @Operation(summary = "Login via Basic Auth")
   @PostMapping("login")
   public String authenticate(Authentication authentication) {
 
     return authenticationService.authenticate(authentication);
   }
 
+  @Operation(summary = "Login via Json Body")
   @PostMapping("/auth")
   public String authFormLogin(@RequestBody @Valid loginDTO login) {
 

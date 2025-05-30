@@ -14,10 +14,13 @@ import br.github.ntidudu.Application.dto.UsuarioDTO;
 import br.github.ntidudu.Application.entity.Usuario.Usuario;
 import br.github.ntidudu.Application.mappers.UsuarioMapper;
 import br.github.ntidudu.Application.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
+@Tag(name = "Usuário")
 @RestController
 @RequestMapping("api/v1/usuarios")
 public class UsuarioController {
@@ -28,7 +31,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioMapper usuarioMapper;
 
-
+    @Operation(summary = "Cadastro de usuários", description = "Cadastro feito a partir de login autorizado.")
     @PreAuthorize("hasAuthority('ADM')")
     @PostMapping("cadastro")
     public ResponseEntity<Void> cadastrarUsuarioBasico(@RequestBody UsuarioDTO entity) {
